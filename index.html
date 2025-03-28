@@ -6,7 +6,9 @@
     <title>15초 그림 그리기</title>
     <style>
         body { text-align: center; font-family: Arial, sans-serif; }
-        canvas { border: 2px solid black; cursor: crosshair; touch-action: none; }
+        #container { position: relative; display: inline-block; }
+        canvas { border: 2px solid black; cursor: crosshair; touch-action: none; position: absolute; top: 0; left: 0; }
+        #image { width: 500px; height: 300px; }
         #timer { font-size: 20px; margin: 10px; }
     </style>
 </head>
@@ -15,7 +17,10 @@
     <p id="timer">15</p>
     <button id="startButton">시작하기</button>
     <br>
-    <canvas id="drawingCanvas" width="500" height="300"></canvas>
+    <div id="container">
+        <img id="image" src="캐릭.png" alt="Reference Image">
+        <canvas id="drawingCanvas" width="500" height="300"></canvas>
+    </div>
     <br>
     <button id="saveButton" disabled>저장하기</button>
     
