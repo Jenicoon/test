@@ -50,7 +50,7 @@
                     clearInterval(timer);
                     canvas.style.pointerEvents = "none";
                     saveButton.disabled = false;
-                    image.style.visibility = "hidden";
+                    image.style.visibility = "hidden"; // 15초 후 이미지 숨김
                 }
             }, 1000);
         }
@@ -67,38 +67,48 @@
             timerStarted = false;
         }
 
-        function getTouchPos(touch) {
+        function getTouchPos(event) {
             const rect = canvas.getBoundingClientRect();
             return {
-                x: touch.clientX - rect.left,
-                y: touch.clientY - rect.top
+                x: (event.touches[0].clientX - rect.left) * (canvas.width / rect.width),
+                y: (event.touches[0].clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+
+        function getMousePos(event) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: (event.clientX - rect.left) * (canvas.width / rect.width),
+                y: (event.clientY - rect.top) * (canvas.height / rect.height)
             };
         }
 
         canvas.addEventListener("mousedown", (event) => {
             if (!timerStarted) return;
             isDrawing = true;
+            const pos = getMousePos(event);
             ctx.beginPath();
-            ctx.moveTo(event.offsetX, event.offsetY);
+            ctx.moveTo(pos.x, pos.y);
         });
 
         canvas.addEventListener("mouseup", () => isDrawing = false);
         canvas.addEventListener("mousemove", (event) => {
             if (!isDrawing) return;
-            ctx.lineTo(event.offsetX, event.offsetY);
+            const pos = getMousePos(event);
+            ctx.lineTo(pos.x, pos.y);
             ctx.strokeStyle = "black";
             ctx.lineWidth = 3;
             ctx.lineCap = "round";
             ctx.stroke();
             ctx.beginPath();
-            ctx.moveTo(event.offsetX, event.offsetY);
+            ctx.moveTo(pos.x, pos.y);
         });
 
         canvas.addEventListener("touchstart", (event) => {
             if (!timerStarted) return;
             event.preventDefault();
             isDrawing = true;
-            const pos = getTouchPos(event.touches[0]);
+            const pos = getTouchPos(event);
             ctx.beginPath();
             ctx.moveTo(pos.x, pos.y);
         });
@@ -107,7 +117,7 @@
         canvas.addEventListener("touchmove", (event) => {
             if (!isDrawing) return;
             event.preventDefault();
-            const pos = getTouchPos(event.touches[0]);
+            const pos = getTouchPos(event);
             ctx.lineTo(pos.x, pos.y);
             ctx.strokeStyle = "black";
             ctx.lineWidth = 3;
