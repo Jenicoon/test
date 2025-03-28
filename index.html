@@ -16,10 +16,11 @@
     <h1>15초 안에 그림 그리기</h1>
     <p id="timer">15</p>
     <button id="startButton">시작하기</button>
+    <button id="resetButton">다시하기</button>
     <br>
     <div id="container">
         <img id="image" src="캐릭.png" alt="Reference Image">
-        <canvas id="drawingCanvas" width="400" height="350"></canvas>
+        <canvas id="drawingCanvas" width="300" height="350"></canvas>
     </div>
     <br>
     <button id="saveButton" disabled>저장하기</button>
@@ -30,6 +31,7 @@
         const timerElement = document.getElementById("timer");
         const saveButton = document.getElementById("saveButton");
         const startButton = document.getElementById("startButton");
+        const resetButton = document.getElementById("resetButton");
         const image = document.getElementById("image");
         
         let timeLeft = 15;
@@ -51,6 +53,18 @@
                     image.style.visibility = "hidden";
                 }
             }, 1000);
+        }
+
+        function resetCanvas() {
+            clearInterval(timer);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            timeLeft = 15;
+            timerElement.textContent = timeLeft;
+            canvas.style.pointerEvents = "auto";
+            saveButton.disabled = true;
+            startButton.disabled = false;
+            image.style.visibility = "visible";
+            timerStarted = false;
         }
 
         function getTouchPos(touch) {
@@ -104,12 +118,15 @@
         });
 
         startButton.addEventListener("click", startTimer);
+        resetButton.addEventListener("click", resetCanvas);
 
         saveButton.addEventListener("click", () => {
             const link = document.createElement("a");
             link.download = "drawing.png";
-            link.href = canvas.toDataURL("image/png");
+            link.href = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
         });
     </script>
 </body>
