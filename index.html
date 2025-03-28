@@ -1,45 +1,78 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0,maximum-scale=10,user-scalable=yes">
-<title>Ruffle Test</title>
-
-<!-- Google Fonts로 한글 글꼴 추가 -->
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-
-<script>
-    window.RufflePlayer = window.RufflePlayer || {};
-    window.addEventListener("load", (event) => {
-        const ruffle = window.RufflePlayer.newest();
-        const player = ruffle.createPlayer();
-        const container = document.getElementById("container");
-        container.appendChild(player);
-        player.load({
-            url: "./기존_SSU_타이머.swf",
-        });
-        player.style.width = "100vw"; 
-        player.style.height = "100vh";
-    });
-    window.RufflePlayer.config = {
-       "autoplay": "on",
-       "unmuteOverlay": "hidden",
-    };
-</script>
-<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
- 
-<style>
-html, body{
-  margin:0;
-  padding:0;
-  overflow:hidden;
-  height: 100%;
-  min-height: 100%;
-  font-family: 'Noto Sans KR', sans-serif; /* 한글 지원하는 웹폰트 적용 */
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15초 그림 그리기</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        canvas { border: 2px solid black; cursor: crosshair; }
+        #timer { font-size: 20px; margin: 10px; }
+    </style>
 </head>
 <body>
-  <div id="container"></div>
+    <h1>15초 안에 그림 그리기</h1>
+    <p id="timer">15</p>
+    <button id="startButton">시작하기</button>
+    <br>
+    <canvas id="drawingCanvas" width="500" height="300"></canvas>
+    <br>
+    <button id="saveButton" disabled>저장하기</button>
+    
+    <script>
+        const canvas = document.getElementById("drawingCanvas");
+        const ctx = canvas.getContext("2d");
+        const timerElement = document.getElementById("timer");
+        const saveButton = document.getElementById("saveButton");
+        const startButton = document.getElementById("startButton");
+        
+        let timeLeft = 15;
+        let timer;
+        let isDrawing = false;
+        let timerStarted = false;
+
+        function startTimer() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startButton.disabled = true;
+            timer = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    canvas.style.pointerEvents = "none";
+                    saveButton.disabled = false;
+                }
+            }, 1000);
+        }
+
+        canvas.addEventListener("mousedown", (event) => {
+            if (!timerStarted) return;
+            isDrawing = true;
+            ctx.beginPath();
+            ctx.moveTo(event.offsetX, event.offsetY);
+        });
+
+        canvas.addEventListener("mouseup", () => isDrawing = false);
+        canvas.addEventListener("mousemove", (event) => {
+            if (!isDrawing) return;
+            ctx.lineTo(event.offsetX, event.offsetY);
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 3;
+            ctx.lineCap = "round";
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(event.offsetX, event.offsetY);
+        });
+
+        startButton.addEventListener("click", startTimer);
+
+        saveButton.addEventListener("click", () => {
+            const link = document.createElement("a");
+            link.download = "drawing.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+    </script>
 </body>
 </html>
