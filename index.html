@@ -30,6 +30,7 @@
         const timerElement = document.getElementById("timer");
         const saveButton = document.getElementById("saveButton");
         const startButton = document.getElementById("startButton");
+        const image = document.getElementById("image");
         
         let timeLeft = 15;
         let timer;
@@ -47,6 +48,7 @@
                     clearInterval(timer);
                     canvas.style.pointerEvents = "none";
                     saveButton.disabled = false;
+                    image.style.display = "none"; // 15초 후 이미지 숨김
                 }
             }, 1000);
         }
