@@ -6,7 +6,7 @@
     <title>15초 그림 그리기</title>
     <style>
         body { text-align: center; font-family: Arial, sans-serif; }
-        canvas { border: 2px solid black; cursor: crosshair; }
+        canvas { border: 2px solid black; cursor: crosshair; touch-action: none; }
         #timer { font-size: 20px; margin: 10px; }
     </style>
 </head>
@@ -46,6 +46,14 @@
             }, 1000);
         }
 
+        function getTouchPos(touch) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: touch.clientX - rect.left,
+                y: touch.clientY - rect.top
+            };
+        }
+
         canvas.addEventListener("mousedown", (event) => {
             if (!timerStarted) return;
             isDrawing = true;
@@ -63,6 +71,29 @@
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(event.offsetX, event.offsetY);
+        });
+
+        canvas.addEventListener("touchstart", (event) => {
+            if (!timerStarted) return;
+            event.preventDefault();
+            isDrawing = true;
+            const pos = getTouchPos(event.touches[0]);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        });
+
+        canvas.addEventListener("touchend", () => isDrawing = false);
+        canvas.addEventListener("touchmove", (event) => {
+            if (!isDrawing) return;
+            event.preventDefault();
+            const pos = getTouchPos(event.touches[0]);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 3;
+            ctx.lineCap = "round";
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
         });
 
         startButton.addEventListener("click", startTimer);
