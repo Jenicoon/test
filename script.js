@@ -9,53 +9,47 @@ let timeLeft = 15;
 let timer;
 let isDrawing = false;
 let timerStarted = false;
-let imageLoaded = false; // 이미지 로드 상태 추적
+let imageLoaded = false;
 
-// 배경 이미지 그리기 (Frame.png)
 function drawBackground() {
     const img = new Image();
-    img.src = 'Frame.png';  // 이미지 경로 수정
+    img.src = 'Frame.png';
     img.onload = () => {
-        // 캔버스 크기를 이미지 크기에 맞추기
         canvas.width = img.width;
         canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);  // 이미지 캔버스에 그리기
-        imageLoaded = true;  // 이미지 로드 완료
+        ctx.drawImage(img, 0, 0);
+        imageLoaded = true;
     };
 }
 
-// 타이머 시작 함수
 function startTimer() {
     if (timerStarted) return;
     timerStarted = true;
-    startButton.style.display = "none";  // 시작 버튼 숨기기
+    startButton.style.display = "none";
     timer = setInterval(() => {
         timeLeft--;
         timerElement.textContent = timeLeft;
         if (timeLeft <= 0) {
             clearInterval(timer);
-            canvas.style.pointerEvents = "none";  // 캔버스 그리기 금지
-            image.style.visibility = "hidden";  // 이미지 숨기기
+            canvas.style.pointerEvents = "none";
+            image.style.visibility = "hidden";
         }
     }, 1000);
 }
 
-// 캔버스 초기화 및 리셋
 function resetCanvas() {
     clearInterval(timer);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     timeLeft = 15;
     timerElement.textContent = timeLeft;
-    canvas.style.pointerEvents = "auto";  // 캔버스 다시 활성화
-    startButton.style.display = "inline-block";  // 시작 버튼 다시 보이기
-    image.style.visibility = "visible";  // 이미지 보이기
+    canvas.style.pointerEvents = "auto";
+    startButton.style.display = "inline-block";
+    image.style.visibility = "visible";
     timerStarted = false;
 
-    // 배경 이미지 다시 그리기
     drawBackground();
 }
 
-// 마우스 위치 가져오기
 function getMousePos(event) {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -64,61 +58,64 @@ function getMousePos(event) {
     };
 }
 
-// 마우스 이동 시 그리기
 canvas.addEventListener("mousedown", (event) => {
-    if (!timerStarted || !imageLoaded) return;  // 타이머 시작되고 이미지가 로드된 후에만 그리기 시작
+    if (!timerStarted || !imageLoaded) return;
     isDrawing = true;
     const pos = getMousePos(event);
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
 });
 
-// 그리기 종료
 canvas.addEventListener("mouseup", () => isDrawing = false);
 
-// 마우스 이동 시 그리기
 canvas.addEventListener("mousemove", (event) => {
-    if (!isDrawing || !imageLoaded) return;  // 이미지가 로드되지 않으면 그리지 않음
+    if (!isDrawing || !imageLoaded) return;
     const pos = getMousePos(event);
     ctx.lineTo(pos.x, pos.y);
-    ctx.strokeStyle = "black";  // 선 색상 (검정색)
-    ctx.lineWidth = 3;  // 선 두께
-    ctx.lineCap = "round";  // 선 끝 모양
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 3;
+    ctx.lineCap = "round";
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
 });
 
-// 터치 시작
+function getTouchPos(event) {
+    const rect = canvas.getBoundingClientRect();
+    const touch = event.touches[0];
+    return {
+        x: (touch.clientX - rect.left) * (canvas.width / rect.width),
+        y: (touch.clientY - rect.top) * (canvas.height / rect.height)
+    };
+}
+
 canvas.addEventListener("touchstart", (event) => {
     if (!timerStarted || !imageLoaded) return;
     event.preventDefault();
     isDrawing = true;
-    const pos = getMousePos(event);
+    const pos = getTouchPos(event);
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
 });
 
-// 터치 종료
-canvas.addEventListener("touchend", () => isDrawing = false);
+canvas.addEventListener("touchend", () => {
+    isDrawing = false;
+});
 
-// 터치 이동 시 그리기
 canvas.addEventListener("touchmove", (event) => {
     if (!isDrawing || !imageLoaded) return;
     event.preventDefault();
-    const pos = getMousePos(event);
+    const pos = getTouchPos(event);
     ctx.lineTo(pos.x, pos.y);
-    ctx.strokeStyle = "white";  // 선 색상 (검정색)
-    ctx.lineWidth = 3;  // 선 두께
-    ctx.lineCap = "round";  // 선 끝 모양
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 3;
+    ctx.lineCap = "round";
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
 });
 
-// 버튼 클릭 이벤트
 startButton.addEventListener("click", startTimer);
 resetButton.addEventListener("click", resetCanvas);
 
-// 페이지가 로드될 때 배경 이미지 그리기
 window.onload = drawBackground;
