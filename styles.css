@@ -48,8 +48,8 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 90%;
-    height: 90%;
+    width: 95%;
+    height: 95%;
     z-index: 2;
 }
 
@@ -59,8 +59,8 @@ canvas {
     position: absolute;
     top: 0;
     left: 0;
-    width: 90%;
-    height: 90%;
+    width: 95%;
+    height: 95%;
     z-index: 1;
 }
 
