@@ -5,11 +5,17 @@ const resetButton = document.getElementById("resetButton");
 const image = document.getElementById("image");
 const timerElement = document.getElementById("timer");
 
+let preventScroll = false;
 let timeLeft = 15;
 let timer;
 let isDrawing = false;
 let timerStarted = false;
 let imageLoaded = false;
+
+startButton.addEventListener("click", () => {
+    preventScroll = true;
+    startTimer();
+});
 
 function drawBackground() {
     const img = new Image();
@@ -90,21 +96,21 @@ function getTouchPos(event) {
 }
 
 canvas.addEventListener("touchstart", (event) => {
+    if (preventScroll) {
+        event.preventDefault()
+    }
     if (!timerStarted || !imageLoaded) return;
-    event.preventDefault();
     isDrawing = true;
     const pos = getTouchPos(event);
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
 });
 
-canvas.addEventListener("touchend", () => {
-    isDrawing = false;
-});
-
 canvas.addEventListener("touchmove", (event) => {
+    if (preventScroll) {
+        event.preventDefault();
+    }
     if (!isDrawing || !imageLoaded) return;
-    event.preventDefault();
     const pos = getTouchPos(event);
     ctx.lineTo(pos.x, pos.y);
     ctx.strokeStyle = "black";
@@ -113,6 +119,13 @@ canvas.addEventListener("touchmove", (event) => {
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
+});
+
+canvas.addEventListener("touchend", () => {
+    isDrawing = false;
+    if (preventScroll) {
+        preventScroll = false;
+    }
 });
 
 startButton.addEventListener("click", startTimer);
