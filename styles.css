@@ -16,6 +16,26 @@ body {
     z-index: -1;
 }
 
+#topImage {
+    width: 20%;
+    height: 20%;
+}
+
+#titleImage {
+    width: 20%;
+    height: 20%;
+}
+
+#extra {
+    width: 20%;
+    height: 20%;
+}
+
+#bottomImage {
+    width: 20%;
+    height: 20%;
+}
+
 #container {
     position: relative;
     display: inline-block;
@@ -55,7 +75,7 @@ canvas {
 
 .button {
     cursor: pointer;
-    width: 150px;
+    width: 80px;
     margin: 10px;
 }
 
