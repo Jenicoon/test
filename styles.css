@@ -17,23 +17,23 @@ body {
 }
 
 #topImage {
-    width: 20%;
-    height: 20%;
+    width: 50%;
+    height: 50%;
 }
 
 #titleImage {
-    width: 20%;
-    height: 20%;
+    width: 50%;
+    height: 50%;
 }
 
 #extra {
-    width: 20%;
-    height: 20%;
+    width: 50%;
+    height: 50%;
 }
 
 #bottomImage {
-    width: 20%;
-    height: 20%;
+    width: 50%;
+    height: 50%;
 }
 
 #container {
