@@ -4,140 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>15초 그림 그리기</title>
-    <style>
-        body { text-align: center; font-family: Arial, sans-serif; }
-        #container { position: relative; display: inline-block; width: 400px; height: 350px; }
-        canvas { border: 2px solid black; cursor: crosshair; touch-action: none; position: absolute; top: 0; left: 0; width: 400px; height: 350px; }
-        #image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 80%; max-height: 80%; }
-        #timer { font-size: 20px; margin: 10px; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>15초 안에 그림 그리기</h1>
+    <div id="background"></div>
+    <img id="topImage" src="top.png" alt="Top Image">
+    <img id="titleImage" src="Title.png" alt="Title">
     <p id="timer">15</p>
-    <button id="startButton">시작하기</button>
-    <button id="resetButton">다시하기</button>
+    <br>
+    <img id="startButton" src="Start.png" alt="Start" class="button">
+    <img id="resetButton" src="Reset.png" alt="Reset" class="button">
+    
     <br>
     <div id="container">
+        <img id="frameImage" src="Frame.png" alt="Frame">
         <img id="image" src="캐릭.png" alt="Reference Image">
-        <canvas id="drawingCanvas" width="300" height="350"></canvas>
+        <canvas id="drawingCanvas"></canvas>
     </div>
     <br>
-    <button id="saveButton" disabled>저장하기</button>
-    
-    <script>
-        const canvas = document.getElementById("drawingCanvas");
-        const ctx = canvas.getContext("2d");
-        const timerElement = document.getElementById("timer");
-        const saveButton = document.getElementById("saveButton");
-        const startButton = document.getElementById("startButton");
-        const resetButton = document.getElementById("resetButton");
-        const image = document.getElementById("image");
-        
-        let timeLeft = 15;
-        let timer;
-        let isDrawing = false;
-        let timerStarted = false;
-
-        function startTimer() {
-            if (timerStarted) return;
-            timerStarted = true;
-            startButton.disabled = true;
-            timer = setInterval(() => {
-                timeLeft--;
-                timerElement.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    canvas.style.pointerEvents = "none";
-                    saveButton.disabled = false;
-                    image.style.visibility = "hidden"; // 15초 후 이미지 숨김
-                }
-            }, 1000);
-        }
-
-        function resetCanvas() {
-            clearInterval(timer);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            timeLeft = 15;
-            timerElement.textContent = timeLeft;
-            canvas.style.pointerEvents = "auto";
-            saveButton.disabled = true;
-            startButton.disabled = false;
-            image.style.visibility = "visible";
-            timerStarted = false;
-        }
-
-        function getTouchPos(event) {
-            const rect = canvas.getBoundingClientRect();
-            return {
-                x: (event.touches[0].clientX - rect.left) * (canvas.width / rect.width),
-                y: (event.touches[0].clientY - rect.top) * (canvas.height / rect.height)
-            };
-        }
-
-        function getMousePos(event) {
-            const rect = canvas.getBoundingClientRect();
-            return {
-                x: (event.clientX - rect.left) * (canvas.width / rect.width),
-                y: (event.clientY - rect.top) * (canvas.height / rect.height)
-            };
-        }
-
-        canvas.addEventListener("mousedown", (event) => {
-            if (!timerStarted) return;
-            isDrawing = true;
-            const pos = getMousePos(event);
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        });
-
-        canvas.addEventListener("mouseup", () => isDrawing = false);
-        canvas.addEventListener("mousemove", (event) => {
-            if (!isDrawing) return;
-            const pos = getMousePos(event);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.strokeStyle = "black";
-            ctx.lineWidth = 3;
-            ctx.lineCap = "round";
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        });
-
-        canvas.addEventListener("touchstart", (event) => {
-            if (!timerStarted) return;
-            event.preventDefault();
-            isDrawing = true;
-            const pos = getTouchPos(event);
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        });
-
-        canvas.addEventListener("touchend", () => isDrawing = false);
-        canvas.addEventListener("touchmove", (event) => {
-            if (!isDrawing) return;
-            event.preventDefault();
-            const pos = getTouchPos(event);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.strokeStyle = "black";
-            ctx.lineWidth = 3;
-            ctx.lineCap = "round";
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-        });
-
-        startButton.addEventListener("click", startTimer);
-        resetButton.addEventListener("click", resetCanvas);
-
-        saveButton.addEventListener("click", () => {
-            const link = document.createElement("a");
-            link.download = "drawing.png";
-            link.href = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
-    </script>
+    <img id="extra" src="extra.png" alt="extra">
+    <img id="bottomImage" src="Bottom.png" alt="Bottom Image">
+    <script src="script.js"></script>
 </body>
 </html>
