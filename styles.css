@@ -56,6 +56,7 @@ body {
     z-index: 2;
     background-color: white;
     border-radius: 30px;
+    margin-left: 10px;
     width: 90%;
     height: 95%;
     opacity: 60%;
@@ -64,7 +65,7 @@ body {
 #image {
     position: absolute;
     top: 48%;
-    left: 45%;
+    left: 48%;
     transform: translate(-50%, -50%);
     max-width: 80%;
     max-height: 80%;
