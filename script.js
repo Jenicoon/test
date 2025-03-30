@@ -19,11 +19,13 @@ startButton.addEventListener("click", () => {
 
 function drawBackground() {
     const img = new Image();
-    img.src = 'Frame.png';
+    img.src = 'Frame.png'
     img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
+        imageWidth = img.width;
+        imageHeight = img.height;
+        imageX = (canvas.width - img.width) / 2;
+        imageY = (canvas.height - img.height) / 2;
+        ctx.drawImage(img, imageX, imageY);
         imageLoaded = true;
     };
 }
@@ -38,10 +40,12 @@ function startTimer() {
         if (timeLeft <= 0) {
             clearInterval(timer);
             canvas.style.pointerEvents = "none";
-            image.style.visibility = "hidden";
+            image.style.visibility = "hidden"
+            document.getElementById("drawingCanvas").style.opacity = "100%";
         }
     }, 1000);
 }
+
 
 function resetCanvas() {
     clearInterval(timer);
@@ -50,7 +54,6 @@ function resetCanvas() {
     timerElement.textContent = timeLeft;
     canvas.style.pointerEvents = "auto";
     startButton.style.display = "inline-block";
-    image.style.visibility = "visible";
     timerStarted = false;
 
     drawBackground();

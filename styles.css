@@ -5,6 +5,8 @@ body {
     background-size: cover;
     margin: 0;
     padding: 0;
+    height: 100%;
+    width: 100%;
 }
 
 #background {
@@ -44,33 +46,18 @@ body {
     height: 350px;
 }
 
-#frameImage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 95%;
-    height: 95%;
-    z-index: 2;
-}
-
-canvas {
-    cursor: crosshair;
-    touch-action: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 95%;
-    height: 95%;
-    z-index: 1;
-}
 
 #drawingCanvas {
+    cursor: crosshair;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 2;  /* 캔버스가 이미지 위에 오도록 설정 */
-    background-color: transparent;  /* 캔버스 배경 투명하게 설정 */
-    border: none;  /* 캔버스 테두리 제거 */
+    z-index: 2;
+    background-color: white;
+    border-radius: 30px;
+    width: 95%;
+    height: 95%;
+    opacity: 60%;
 }
 
 #image {
